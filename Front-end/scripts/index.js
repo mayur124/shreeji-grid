@@ -1,12 +1,17 @@
-let data = [];
-let pageData = {}
+import { Table } from "./table.js";
+
+document.addEventListener('load', fetchData());
 
 async function fetchData() {
     await fetch("http://localhost:8099/list")
-    .then(response => response.json())
-    .then(responseData => {
-        data = responseData.data;
-        pageData = responseData.pageData;
-    })
-    .catch(error => console.log(error));
+        .then(response => response.json())
+        .then(responseData => {
+            if (responseData.data.length > 0) {
+                const tables = document.querySelectorAll('[role=table]');
+                tables.forEach(table => {
+                    new Table(table, responseData);
+                });
+            }
+        })
+        .catch(error => console.log(error));
 }

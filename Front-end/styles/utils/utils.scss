@@ -1,0 +1,38 @@
+.w-100 {
+  width: 100%;
+}
+.collapse {
+  border-collapse: collapse;
+}
+@for $val from 0 to 6 {
+  .p-#{$val} {
+    padding: #{$val}rem;
+  }
+  .pt-#{$val} {
+    padding-top: #{$val}rem;
+  }
+  .pr-#{$val} {
+    padding-right: #{$val}rem;
+  }
+  .pb-#{$val} {
+    padding-bottom: #{$val}rem;
+  }
+  .pl-#{$val} {
+    padding-left: #{$val}rem;
+  }
+  .m-#{$val} {
+    margin: #{$val}rem;
+  }
+  .mt-#{$val} {
+    margin-top: #{$val}rem;
+  }
+  .mr-#{$val} {
+    margin-right: #{$val}rem;
+  }
+  .mb-#{$val} {
+    margin-bottom: #{$val}rem;
+  }
+  .ml-#{$val} {
+    margin-left: #{$val}rem;
+  }
+}
