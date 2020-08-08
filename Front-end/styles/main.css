@@ -1,13 +1,43 @@
 @import url("./utils/utils.css");
-@import url("./table-styles/table.css");
 * {
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
 }
 
-table th {
+body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+body #table-wrapper {
+  height: 98vh;
+}
+
+table th,
+table td {
   font-size: 1.5rem;
   padding: 1rem;
+}
+
+table tbody tr:hover {
+  background-color: #eeeeee;
+}
+
+.border-bottom {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.border {
+  border: 1px solid #dee2e6;
+}
+
+.table-row-border {
+  border-bottom: 1px solid #dee2e6;
 }
 /*# sourceMappingURL=main.css.map */

@@ -6,6 +6,38 @@
   border-collapse: collapse;
 }
 
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.d-block {
+  display: block;
+}
+
+.text-upper {
+  text-transform: uppercase;
+}
+
 .p-0 {
   padding: 0rem;
 }

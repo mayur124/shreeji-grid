@@ -1,15 +1,35 @@
+$border-color: #dee2e6;
+$row-hover-color: #eeeeee;
 * {
-  // margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
 }
+body {
+  display: flex;
+  flex-direction: column;
+  #table-wrapper{
+    height: 98vh;
+  }
+}
 table {
-  th {
+  th,
+  td {
     font-size: 1.5rem;
     padding: 1rem;
   }
+  tbody tr:hover {
+    background-color: $row-hover-color;
+  }
+}
+.border-bottom {
+  border-bottom: 2px solid $border-color;
+}
+.border {
+  border: 1px solid $border-color;
+}
+.table-row-border {
+  border-bottom: 1px solid $border-color;
 }
 
 @import url("./utils/utils.css");
-@import url("./table-styles/table.css");

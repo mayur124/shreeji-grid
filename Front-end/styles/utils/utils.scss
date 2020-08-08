@@ -4,6 +4,30 @@
 .collapse {
   border-collapse: collapse;
 }
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.overflow-auto {
+  overflow: auto;
+}
+.overflow-x-auto {
+  overflow-x: auto;
+}
+.overflow-y-auto {
+  overflow-y: auto;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.d-block {
+  display: block;
+}
+.text-upper {
+  text-transform: uppercase;
+}
 @for $val from 0 to 6 {
   .p-#{$val} {
     padding: #{$val}rem;

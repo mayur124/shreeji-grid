@@ -7,7 +7,7 @@ async function fetchData() {
         .then(response => response.json())
         .then(responseData => {
             if (responseData.data.length > 0) {
-                const tables = document.querySelectorAll('[role=table]');
+                const tables = document.querySelectorAll('table');
                 tables.forEach(table => {
                     new Table(table, responseData);
                 });
