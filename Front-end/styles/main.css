@@ -19,10 +19,44 @@ body #table-wrapper {
   height: 98vh;
 }
 
+table th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: -1px;
+  background-color: aliceblue;
+  padding: 1rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+table td {
+  padding: 0.5rem;
+}
+
 table th,
 table td {
   font-size: 1.5rem;
-  padding: 1rem;
+}
+
+table .th-sort-asc,
+table .th-sort-desc {
+  background-color: #c4cacf;
+}
+
+table .th-sort-asc::after,
+table .th-sort-desc::after {
+  margin-left: 5px;
+}
+
+table .th-sort-asc::after {
+  content: "\25b4";
+}
+
+table .th-sort-desc::after {
+  content: "\25be";
 }
 
 table tbody tr:hover {

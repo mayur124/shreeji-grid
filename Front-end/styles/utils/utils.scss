@@ -28,6 +28,15 @@
 .text-upper {
   text-transform: uppercase;
 }
+.d-flex {
+  display: flex;
+}
+.align-items-center {
+  align-items: center;
+}
+.justify-content-around {
+  justify-content: space-around;
+}
 @for $val from 0 to 6 {
   .p-#{$val} {
     padding: #{$val}rem;

@@ -7,10 +7,8 @@ async function fetchData() {
         .then(response => response.json())
         .then(responseData => {
             if (responseData.data.length > 0) {
-                const tables = document.querySelectorAll('table');
-                tables.forEach(table => {
-                    new Table(table, responseData);
-                });
+                const table = document.querySelector('table');
+                new Table(table, responseData);
             }
         })
         .catch(error => console.log(error));
