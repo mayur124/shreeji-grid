@@ -37,7 +37,6 @@ export function Table(tableElement, tableData) {
             const tRow = document.createElement("tr");
             for (const key in row) {
                 const td = document.createElement("td");
-                // td.innerText = checkForDateString(row[key]);
                 td.innerText = row[key];
                 td.classList.add("border", getAlignmentClass(row[key]));
                 tRow.appendChild(td);
@@ -52,34 +51,8 @@ export function Table(tableElement, tableData) {
      * @returns {boolean}
      */
     function isNumeric(text) {
-        const _text = text;
-        const numRegex = /(\d+|\.?\d+)/g;
-        return numRegex.test(_text);
-    }
-    /**
-     * @param {string} text 
-     * @returns {boolean}
-     */
-    function isDate(text) {
-        const _text = text;
-        const dateRegex = /\d{4}(-\d{2})+ (\d{2}:?)+/g;
-        return dateRegex.test(_text);
-    }
-    /**
-     * Returns the data-type of the text
-     * @param {string} text 
-     * @returns {'string' | 'number' | 'date'} data-type of the text
-     */
-    function getDataType(text) {
-        const dateRegex = /\d{4}(-\d{2})+ (\d{2}:?)+/g;
-        const numRegex = /(\d+|\.?\d+)/g;
-        if (dateRegex.test(text)) {
-            return "date"
-        }
-        else if (numRegex.test(text)) {
-            return "number";
-        }
-        return "string";
+        const numRegex = /\d*/g;
+        return numRegex.test(text) && !(text.includes("-") && text.includes(":"));
     }
     /**
      * set position of string data to left and rest to the right
@@ -112,13 +85,9 @@ export function Table(tableElement, tableData) {
         const sortedRows = rows.sort((a, b) => {
             let aColText = a.querySelector(`td:nth-child(${colIndex + 1})`).textContent.trim();
             let bColText = b.querySelector(`td:nth-child(${colIndex + 1})`).textContent.trim();
-            switch (getDataType(aColText)) {
-                case "number":
-                    aColText = Number(aColText);
-                    bColText = Number(bColText);
-                    break;
-                default:
-                    break;
+            if (isNumeric(aColText)) {
+                aColText = Number(aColText);
+                bColText = Number(bColText);
             }
             if (typeof aColText == "number" && aColText == bColText) {
                 return 1;
