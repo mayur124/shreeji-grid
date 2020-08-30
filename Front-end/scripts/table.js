@@ -1,3 +1,5 @@
+import { Pagination } from "./pagination.js";
+
 /**
  * @param {HTMLTableElement} tableElement 
  * @param {{data: any, pageData: {totalRecords: number, totalPages: number}}} tableData
@@ -8,9 +10,9 @@ export function Table(tableElement, tableData) {
     function initTable() {
         setHeaders(data[0]);
         renderHeader();
-        getSearchNode();
         renderBody();
         enableSorting();
+        setPagination();
     }
     function setHeaders(row) {
         for (const key in row) {
@@ -130,6 +132,10 @@ export function Table(tableElement, tableData) {
             });
         });
     }
+    function setPagination() {
+        debugger;
+        new Pagination(tableElement, tableData.pageData);
+    }
     /**
      * @param {number} colIndex 
      * @param {boolean} ascending 
@@ -156,17 +162,6 @@ export function Table(tableElement, tableData) {
         handleToggleArrowStyle(colIndex, ascending);
     }
     /**
-     * 
-     * @param {Element} parentElement 
-     */
-    function toggleClass(parentElement) {
-        return function (className) {
-            return function (flag) {
-                return parentElement.classList.toggle(className, flag);
-            }
-        }
-    }
-    /**
      * @param {number} colIndex 
      * @param {boolean} ascending 
      */
@@ -176,6 +171,17 @@ export function Table(tableElement, tableData) {
         let toggle = toggleClass(selectedSpan);
         toggle("th-sort-asc")(ascending);
         toggle("th-sort-desc")(!ascending);
+    }
+    /**
+     * 
+     * @param {Element} parentElement 
+     */
+    function toggleClass(parentElement) {
+        return function (className) {
+            return function (flag) {
+                return parentElement.classList.toggle(className, flag);
+            }
+        }
     }
     initTable();
     /* 
