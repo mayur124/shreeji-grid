@@ -8,6 +8,7 @@ export function Table(tableElement, tableData) {
     function initTable() {
         setHeaders(data[0]);
         renderHeader();
+        getSearchNode();
         renderBody();
         enableSorting();
     }
@@ -20,15 +21,56 @@ export function Table(tableElement, tableData) {
         const headerFragment = document.createDocumentFragment();
         const tableHead = document.createElement("thead");
         const headerRow = document.createElement("tr");
-        headers.forEach(header => {
+        headers.forEach((header, index) => {
             const headerNode = document.createElement("th");
-            headerNode.classList.add('border', 'text-upper');
-            headerNode.innerText = header.trim();
+            const label = document.createElement("span");
+            headerNode.classList.add("border");
+            label.innerText = header.trim();
+            label.classList.add("text-upper", "font-size-large");
+            headerNode.appendChild(label);
+            headerNode.appendChild(getSearchNode(index));
             headerRow.appendChild(headerNode);
         });
         tableHead.appendChild(headerRow);
         headerFragment.appendChild(tableHead);
         tableElement.appendChild(headerFragment);
+    }
+    function getSearchNode(colIndex) {
+        const inputField = document.createElement("input");
+        inputField.classList.add("w-100", "border", "mt-1");
+        inputField.style.height = "2em";
+        inputField.style.padding = "2px";
+        inputField.style.borderColor = "#cbe2f7";
+        inputField.addEventListener("keyup", () => search(event, colIndex));
+        return inputField;
+    }
+    /**
+     * @param {KeyboardEvent} event
+     * @param {number} colIndex
+     */
+    function search(event, colIndex) {
+        const value = event.srcElement.value.toLowerCase();
+        const rows = getRows();
+        const filteredRows = rows.filter(row => {
+            let text = row.querySelector(`td:nth-child(${colIndex + 1})`).textContent.trim();
+            return text.toLowerCase().indexOf(value) > -1;
+        });
+        if (filteredRows.length == 0) {
+            setRows(rows);
+        } else {
+            setRows(filteredRows);
+        }
+    }
+    /**
+     * 
+     * @param {HTMLTableRowElement[]} rows 
+     */
+    function setRows(rows) {
+        const tBody = tableElement.tBodies[0];
+        while (tBody.firstChild) {
+            tBody.removeChild(tBody.firstChild);
+        }
+        tBody.append(...rows);
     }
     function renderBody() {
         const bodyFragment = document.createDocumentFragment();
@@ -46,13 +88,27 @@ export function Table(tableElement, tableData) {
         bodyFragment.appendChild(tBody);
         tableElement.appendChild(bodyFragment);
     }
+    function getRows() {
+        const rows = [];
+        data.forEach(row => {
+            const tRow = document.createElement("tr");
+            for (const key in row) {
+                const td = document.createElement("td");
+                td.innerText = row[key];
+                td.classList.add("border", getAlignmentClass(row[key]));
+                tRow.appendChild(td);
+            }
+            rows.push(tRow);
+        });
+        return rows;
+    }
     /**
      * @param {string} text 
      * @returns {boolean}
      */
     function isNumeric(text) {
-        const numRegex = /\d*/g;
-        return numRegex.test(text) && !(text.includes("-") && text.includes(":"));
+        const numRegex = /\d+/g;
+        return numRegex.test(text) && !(text.includes("-") || text.includes(":"));
     }
     /**
      * set position of string data to left and rest to the right
@@ -67,10 +123,10 @@ export function Table(tableElement, tableData) {
         }
     }
     function enableSorting() {
-        tableElement.querySelectorAll("th").forEach(headerCell => {
+        tableElement.querySelectorAll("span.text-upper").forEach((headerCell, index) => {
             headerCell.addEventListener("click", () => {
                 const isAscending = headerCell.classList.contains("th-sort-asc");
-                sortTableByColumn(headerCell.cellIndex, !isAscending);
+                sortTableByColumn(index, !isAscending);
             });
         });
     }
@@ -96,20 +152,35 @@ export function Table(tableElement, tableData) {
                 return aColText > bColText ? 1 * dirModifier : -1 * dirModifier;
             }
         });
-        while (tBody.firstChild) {
-            tBody.removeChild(tBody.firstChild);
-        }
-        tBody.append(...sortedRows);
+        setRows(sortedRows);
         handleToggleArrowStyle(colIndex, ascending);
+    }
+    /**
+     * 
+     * @param {Element} parentElement 
+     */
+    function toggleClass(parentElement) {
+        return function (className) {
+            return function (flag) {
+                return parentElement.classList.toggle(className, flag);
+            }
+        }
     }
     /**
      * @param {number} colIndex 
      * @param {boolean} ascending 
      */
     function handleToggleArrowStyle(colIndex, ascending) {
-        tableElement.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
-        tableElement.querySelector(`th:nth-child(${colIndex + 1})`).classList.toggle("th-sort-asc", ascending);
-        tableElement.querySelector(`th:nth-child(${colIndex + 1})`).classList.toggle("th-sort-desc", !ascending);
+        tableElement.querySelectorAll("thead tr:nth-child(1) th span").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
+        let selectedSpan = tableElement.querySelector(`thead tr:nth-child(1) th:nth-child(${colIndex + 1}) span`);
+        let toggle = toggleClass(selectedSpan);
+        toggle("th-sort-asc")(ascending);
+        toggle("th-sort-desc")(!ascending);
     }
     initTable();
+    /* 
+        Things remaining >> 
+            1. Searching  - server side
+            2. Pagination - client and server side
+    */
 }

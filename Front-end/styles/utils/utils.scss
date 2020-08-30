@@ -28,6 +28,9 @@
 .text-upper {
   text-transform: uppercase;
 }
+.font-size-large {
+  font-size: large;
+}
 .d-flex {
   display: flex;
 }
@@ -53,6 +56,14 @@
   .pl-#{$val} {
     padding-left: #{$val}rem;
   }
+  .px-#{$val} {
+    padding-left: #{$val}rem;
+    padding-right: #{$val}rem;
+  }
+  .py-#{$val} {
+    padding-top: #{$val}rem;
+    padding-bottom: #{$val}rem;
+  }
   .m-#{$val} {
     margin: #{$val}rem;
   }
@@ -67,5 +78,13 @@
   }
   .ml-#{$val} {
     margin-left: #{$val}rem;
+  }
+  .mx-#{$val} {
+    padding-left: #{$val}rem;
+    padding-right: #{$val}rem;
+  }
+  .my-#{$val} {
+    padding-top: #{$val}rem;
+    padding-bottom: #{$val}rem;
   }
 }
