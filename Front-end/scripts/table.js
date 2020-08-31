@@ -133,8 +133,8 @@ export function Table(tableElement, tableData) {
         });
     }
     function setPagination() {
+        new Pagination(tableElement, tableData.pageData, headers.length);
         debugger;
-        new Pagination(tableElement, tableData.pageData);
     }
     /**
      * @param {number} colIndex 
