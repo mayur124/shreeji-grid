@@ -76,4 +76,9 @@ table tbody tr:hover {
 .table-row-border {
   border-bottom: 1px solid #dee2e6;
 }
+
+.page-size-dropdown {
+  font-size: medium;
+  text-align: center;
+}
 /*# sourceMappingURL=main.css.map */

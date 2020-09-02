@@ -58,5 +58,9 @@ table {
 .table-row-border {
   border-bottom: 1px solid $border-color;
 }
+.page-size-dropdown {
+  font-size: medium;
+  text-align: center;
+}
 
 @import url("./utils/utils.css");

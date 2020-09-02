@@ -80,11 +80,11 @@
     margin-left: #{$val}rem;
   }
   .mx-#{$val} {
-    padding-left: #{$val}rem;
-    padding-right: #{$val}rem;
+    margin-left: #{$val}rem;
+    margin-right: #{$val}rem;
   }
   .my-#{$val} {
-    padding-top: #{$val}rem;
-    padding-bottom: #{$val}rem;
+    margin-top: #{$val}rem;
+    margin-bottom: #{$val}rem;
   }
 }
