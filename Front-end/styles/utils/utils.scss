@@ -4,12 +4,6 @@
 .collapse {
   border-collapse: collapse;
 }
-.text-left {
-  text-align: left;
-}
-.text-right {
-  text-align: right;
-}
 .overflow-auto {
   overflow: auto;
 }
@@ -25,11 +19,11 @@
 .d-block {
   display: block;
 }
-.text-upper {
-  text-transform: uppercase;
-}
 .font-size-large {
   font-size: large;
+}
+.font-size-medium {
+  font-size: medium;
 }
 .d-flex {
   display: flex;
@@ -88,3 +82,4 @@
     margin-bottom: #{$val}rem;
   }
 }
+@import url("./text-alignement.scss");

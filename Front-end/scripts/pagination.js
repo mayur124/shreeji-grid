@@ -4,20 +4,38 @@
  * @param {{totalRecords: number, totalPages: number}} pageData 
  */
 export function Pagination(tableElement, pageData, numOfCols) {
+    let currentPage = 1;
     function setPagination() {
         const footerFragment = document.createDocumentFragment();
         const tableFooter = document.createElement("tfoot");
         const th = document.createElement("th");
-        // th.classList.add("d-flex", "align-items-center", "justify-content-around");
-        th.append(getFirstPageBtn());
-        th.append(getPreviousPageBtn());
-        th.append(getNextPageBtn());
-        th.append(getLastPageBtn());
-        th.append(getPageDropdown());
+        appendFooterControls(th);
         th.colSpan = numOfCols;
         tableFooter.appendChild(th);
         footerFragment.appendChild(tableFooter);
         tableElement.appendChild(footerFragment);
+    }
+    /**
+     * 
+     * @param {HTMLTableHeaderCellElement} th 
+     */
+    function appendFooterControls(th) {
+        th.append(getFirstPageBtn());
+        th.append(getPreviousPageBtn());
+        th.append(getPageInput());
+        th.append(getNextPageBtn());
+        th.append(getLastPageBtn());
+        th.append(getPageDropdown());
+    }
+    function getPageInput() {
+        const pageField = document.createElement("input");
+        pageField.type = "number";
+        pageField.classList.add("text-center", "font-size-medium");
+        pageField.value = currentPage;
+        pageField.min = 1;
+        pageField.max = pageData.totalPages;
+        pageField.addEventListener("keyup", () => goToPage(event.srcElement.value));
+        return pageField;
     }
     function getFirstPageBtn() {
         const btn = getBtn();
@@ -47,7 +65,7 @@ export function Pagination(tableElement, pageData, numOfCols) {
         return function (hexCode) {
             const btn = document.createElement("button");
             btn.innerHTML = hexCode;
-            btn.className = "mx-1";
+            btn.classList.add("mx-1", "pagination-button")
             return btn;
         }
     }
@@ -62,15 +80,24 @@ export function Pagination(tableElement, pageData, numOfCols) {
         btn.title = title;
     }
     function getPageDropdown() {
-        const pageSizeSelect = document.createElement("select");
+        const pageDropdown = document.createElement("select");
         [5, 10, 25, 50].forEach(pageSize => {
             let option = new Option(pageSize, pageSize);
             option.className = "page-size-dropdown";
-            pageSizeSelect.options.add(option);
+            pageDropdown.options.add(option);
         });
-        pageSizeSelect.options.selectedIndex = 0;
-        pageSizeSelect.classList.add("mx-1", "page-size-dropdown");
-        return pageSizeSelect;
+        pageDropdown.options.selectedIndex = 0;
+        pageDropdown.classList.add("mx-1", "page-size-dropdown");
+        pageDropdown.addEventListener("change", () => changePageSize(event));
+        return pageDropdown;
+    }
+    /**
+     * 
+     * @param {Event} event 
+     */
+    function changePageSize(event) {
+        const selectedPageSize = Number(event.srcElement.value);
+        console.log(selectedPageSize);
     }
     /**
      * 
@@ -113,6 +140,7 @@ export function Pagination(tableElement, pageData, numOfCols) {
      * @param {number} pageNumber 
      */
     function goToPage(pageNumber) {
+        pageNumber = Number(pageNumber);
         console.log("goToPage()");
     }
     setPagination();

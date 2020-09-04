@@ -1,17 +1,10 @@
+@import url("./text-alignement.css");
 .w-100 {
   width: 100%;
 }
 
 .collapse {
   border-collapse: collapse;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.text-right {
-  text-align: right;
 }
 
 .overflow-auto {
@@ -34,12 +27,12 @@
   display: block;
 }
 
-.text-upper {
-  text-transform: uppercase;
-}
-
 .font-size-large {
   font-size: large;
+}
+
+.font-size-medium {
+  font-size: medium;
 }
 
 .d-flex {

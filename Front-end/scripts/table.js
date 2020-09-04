@@ -134,7 +134,6 @@ export function Table(tableElement, tableData) {
     }
     function setPagination() {
         new Pagination(tableElement, tableData.pageData, headers.length);
-        debugger;
     }
     /**
      * @param {number} colIndex 

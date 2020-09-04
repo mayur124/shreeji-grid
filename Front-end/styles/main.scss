@@ -62,5 +62,10 @@ table {
   font-size: medium;
   text-align: center;
 }
+.pagination-button {
+  padding: 4px;
+  height: 3em;
+  width: 3em;
+}
 
 @import url("./utils/utils.css");
