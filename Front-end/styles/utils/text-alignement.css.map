@@ -2,8 +2,8 @@
     "version": 3,
     "mappings": "AAAA,AAAA,UAAU,CAAC;EACT,UAAU,EAAE,IAAI;CACjB;;AACD,AAAA,WAAW,CAAC;EACV,UAAU,EAAE,KAAK;CAClB;;AACD,AAAA,WAAW,CAAC;EACV,cAAc,EAAE,SAAS;CAC1B;;AACD,AAAA,YAAY,CAAC;EACT,UAAU,EAAE,MAAM;CACrB",
     "sources": [
-        "text.scss"
+        "text-alignement.scss"
     ],
     "names": [],
-    "file": "text.css"
+    "file": "text-alignement.css"
 }

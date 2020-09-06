@@ -1,4 +1,5 @@
 import { Pagination } from "./pagination.js";
+import * as common from "./common.js";
 
 /**
  * @param {HTMLTableElement} tableElement 
@@ -29,8 +30,11 @@ export function Table(tableElement, tableData) {
             headerNode.classList.add("border");
             label.innerText = header.trim();
             label.classList.add("text-upper", "font-size-large");
-            headerNode.appendChild(label);
-            headerNode.appendChild(getSearchNode(index));
+            const _multipleAppend = common.createMultipleAppendTo(headerNode);
+            _multipleAppend([
+                label,
+                getSearchNode(index)
+            ]);
             headerRow.appendChild(headerNode);
         });
         tableHead.appendChild(headerRow);
@@ -52,57 +56,21 @@ export function Table(tableElement, tableData) {
      */
     function search(event, colIndex) {
         const value = event.srcElement.value.toLowerCase();
-        const rows = getRows();
+        const rows = common.getRows(data);
         const filteredRows = rows.filter(row => {
             let text = row.querySelector(`td:nth-child(${colIndex + 1})`).textContent.trim();
             return text.toLowerCase().indexOf(value) > -1;
         });
         if (filteredRows.length == 0) {
-            setRows(rows);
+            common.setRows(getTblBody(), rows);
         } else {
-            setRows(filteredRows);
+            common.setRows(getTblBody(), filteredRows);
         }
-    }
-    /**
-     * 
-     * @param {HTMLTableRowElement[]} rows 
-     */
-    function setRows(rows) {
-        const tBody = tableElement.tBodies[0];
-        while (tBody.firstChild) {
-            tBody.removeChild(tBody.firstChild);
-        }
-        tBody.append(...rows);
     }
     function renderBody() {
         const bodyFragment = document.createDocumentFragment();
-        const tBody = document.createElement("tbody");
-        data.forEach(row => {
-            const tRow = document.createElement("tr");
-            for (const key in row) {
-                const td = document.createElement("td");
-                td.innerText = row[key];
-                td.classList.add("border", getAlignmentClass(row[key]));
-                tRow.appendChild(td);
-            }
-            tBody.appendChild(tRow);
-        });
-        bodyFragment.appendChild(tBody);
+        bodyFragment.appendChild(common.renderBody(data));
         tableElement.appendChild(bodyFragment);
-    }
-    function getRows() {
-        const rows = [];
-        data.forEach(row => {
-            const tRow = document.createElement("tr");
-            for (const key in row) {
-                const td = document.createElement("td");
-                td.innerText = row[key];
-                td.classList.add("border", getAlignmentClass(row[key]));
-                tRow.appendChild(td);
-            }
-            rows.push(tRow);
-        });
-        return rows;
     }
     /**
      * @param {string} text 
@@ -111,18 +79,6 @@ export function Table(tableElement, tableData) {
     function isNumeric(text) {
         const numRegex = /\d+/g;
         return numRegex.test(text) && !(text.includes("-") || text.includes(":"));
-    }
-    /**
-     * set position of string data to left and rest to the right
-     * @param {any} text 
-     * @returns {string} alignment class
-     */
-    function getAlignmentClass(text) {
-        if (typeof text == "string") {
-            return "text-left";
-        } else {
-            return "text-right";
-        }
     }
     function enableSorting() {
         tableElement.querySelectorAll("span.text-upper").forEach((headerCell, index) => {
@@ -133,7 +89,7 @@ export function Table(tableElement, tableData) {
         });
     }
     function setPagination() {
-        new Pagination(tableElement, tableData.pageData, headers.length);
+        new Pagination(tableElement, pageData, data, headers.length);
     }
     /**
      * @param {number} colIndex 
@@ -157,7 +113,7 @@ export function Table(tableElement, tableData) {
                 return aColText > bColText ? 1 * dirModifier : -1 * dirModifier;
             }
         });
-        setRows(sortedRows);
+        common.setRows(getTblBody(), sortedRows);
         handleToggleArrowStyle(colIndex, ascending);
     }
     /**
@@ -181,6 +137,9 @@ export function Table(tableElement, tableData) {
                 return parentElement.classList.toggle(className, flag);
             }
         }
+    }
+    function getTblBody() {
+        return tableElement.tBodies[0];
     }
     initTable();
     /* 

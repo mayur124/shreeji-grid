@@ -48,6 +48,11 @@ table {
   tbody tr:hover {
     background-color: $row-hover-color;
   }
+  tfoot {
+    th {
+      bottom: 0;
+    }
+  }
 }
 .border-bottom {
   border-bottom: 2px solid $border-color;
@@ -63,8 +68,6 @@ table {
   text-align: center;
 }
 .pagination-button {
-  padding: 4px;
-  height: 3em;
   width: 3em;
 }
 

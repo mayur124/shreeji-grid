@@ -65,6 +65,10 @@ table tbody tr:hover {
   background-color: #eeeeee;
 }
 
+table tfoot th {
+  bottom: 0;
+}
+
 .border-bottom {
   border-bottom: 2px solid #dee2e6;
 }
@@ -83,8 +87,6 @@ table tbody tr:hover {
 }
 
 .pagination-button {
-  padding: 4px;
-  height: 3em;
   width: 3em;
 }
 /*# sourceMappingURL=main.css.map */
