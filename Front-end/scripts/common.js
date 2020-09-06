@@ -1,6 +1,6 @@
 export const createMultipleAppendTo = parentEl => elements => elements.forEach(element => parentEl.appendChild(element));
-export const getRows = rows => rows.map(row => getRow(row));
-export const renderBody = rows => {
+export const getTblRows = rows => rows.map(row => getRow(row));
+export const renderTblBody = rows => {
     const tBody = document.createElement('tbody');
     rows.forEach(row => tBody.appendChild(getRow(row)));
     return tBody;
@@ -34,7 +34,7 @@ const _getAlignmentClass = text => {
  * @param {HTMLTableSectionElement} tBody
  * @param {HTMLTableRowElement[]} rows 
 */
-export const setRows = (tBody, rows) => {
+export const setTblRows = (tBody, rows) => {
     while (tBody.firstChild) {
         tBody.removeChild(tBody.firstChild);
     }

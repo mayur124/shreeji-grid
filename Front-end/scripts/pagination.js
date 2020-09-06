@@ -102,8 +102,8 @@ export function Pagination(tableElement, pageData, data, numOfCols) {
      */
     function changePageSize(event) {
         const selectedPageSize = Number(event.srcElement.value);
-        const slicedData = common.getRows(data.slice(0, selectedPageSize));
-        common.setRows(tableElement.tBodies[0], slicedData);
+        const slicedData = common.getTblRows(data.slice(0, selectedPageSize));
+        common.setTblRows(tableElement.tBodies[0], slicedData);
         console.log(selectedPageSize);
     }
     /**
