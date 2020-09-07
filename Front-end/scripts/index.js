@@ -7,7 +7,7 @@ const fetchData = async () => {
             if (responseData.data.length > 0) {
                 debugger;
                 const table = document.querySelector('table');
-                _table.initTable(table, responseData);
+                _table.initTable(table, responseData.data);
                 _table.initPagination(table, responseData.pageData, responseData.data, _getNumOfCols(responseData.data[0]));
             }
         })
