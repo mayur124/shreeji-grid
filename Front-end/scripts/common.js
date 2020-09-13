@@ -42,13 +42,13 @@ export const appendRecursive = parentEl => {
     }
     return innerAppend;
 }
-export const getTblRows = rows => rows.map(row => getRow(row));
+export const getHTMLTblRows = rows => rows.map(row => getTr(row));
 export const renderTblBody = rows => {
     const tBody = document.createElement('tbody');
-    rows.forEach(row => tBody.appendChild(getRow(row)));
+    rows.forEach(row => tBody.appendChild(getTr(row)));
     return tBody;
 }
-export const getRow = row => {
+export const getTr = row => {
     const tr = document.createElement("tr");
     for (const key in row) {
         tr.appendChild(_getTd(row[key]));

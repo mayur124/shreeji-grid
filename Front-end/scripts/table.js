@@ -62,7 +62,7 @@ const _getSearchNode = index => {
 */
 const _search = (event, index) => {
     const value = event.srcElement.value.toLowerCase();
-    const rows = common.getTblRows(_getRowData());
+    const rows = common.getHTMLTblRows(_getRowData());
     const filteredRows = rows.filter(row => {
         let _text = row.querySelector(`td:nth-child(${index + 1})`).textContent.trim();
         return _text.toLowerCase().indexOf(value) > -1;
@@ -101,7 +101,7 @@ const _initSort = () => {
 */
 const _sortTableByColumn = (index, ascending = true) => {
     const dirModifier = ascending === true ? 1 : -1;
-    const rows = common.getTblRows(_getRowData());
+    const rows = common.getHTMLTblRows(_getRowData());
     const sortedRows = rows.sort((a, b) => {
         let aColText = a.querySelector(`td:nth-child(${index + 1})`).textContent.trim();
         let bColText = b.querySelector(`td:nth-child(${colIndex + 1})`).textContent.trim();

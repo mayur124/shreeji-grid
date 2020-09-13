@@ -1,5 +1,13 @@
 import * as common from "./common.js"
 
+const _btnHexCode = {
+    firstBtn: '&#9668;&#9668;',
+    prevBtn: '&#9664;',
+    nextBtn: '&#9654;',
+    lastBtn: '&#9658;&#9658;',
+};
+const pageSizes = [5, 10, 25, 50];
+
 /**
  * @param {HTMLElementTagNameMap} element 
  */
@@ -16,6 +24,7 @@ export const initPagination = () => {
     _appendFooterControls(_th);
     common.appendRecursive(_footerFragment)(_tableFooter)(_th);
     _getTableEl().appendChild(_footerFragment);
+    _disableBtnsConditionally();
 }
 
 const _appendFooterControls = th => {
@@ -36,33 +45,47 @@ const _getPageInput = () => {
     pageField.value = 1;
     pageField.min = 1;
     pageField.max = common.getPaginationData().totalPages;
-    pageField.addEventListener("keyup", () => goToPage(event.srcElement.value));
+    pageField.addEventListener("keyup", () => _goToPage(event.srcElement.value));
     return pageField;
 }
 const _getFirstPageBtn = () => {
     const btn = _getBtn();
-    const firstBtn = btn("&#9668;&#9668;");
-    setBtnEventTitle(firstBtn, "first", "First");
+    const firstBtn = btn(_btnHexCode.firstBtn);
+    _setBtnEventTitle(firstBtn, "first", "First");
     return firstBtn;
 }
 const _getPreviousPageBtn = () => {
     const btn = _getBtn();
-    const prevBtn = btn("&#9664;");
-    setBtnEventTitle(prevBtn, "previous", "Previous");
+    const prevBtn = btn(_btnHexCode.prevBtn);
+    _setBtnEventTitle(prevBtn, "previous", "Previous");
     return prevBtn;
 }
 const _getNextPageBtn = () => {
     const btn = _getBtn();
-    const nextBtn = btn("&#9654;");
-    setBtnEventTitle(nextBtn, "next", "Next");
+    const nextBtn = btn(_btnHexCode.nextBtn);
+    _setBtnEventTitle(nextBtn, "next", "Next");
     return nextBtn;
 }
 const _getLastPageBtn = () => {
     const btn = _getBtn();
-    const lastBtn = btn("&#9658;&#9658;");
-    setBtnEventTitle(lastBtn, "last", "Last");
+    const lastBtn = btn(_btnHexCode.lastBtn);
+    _setBtnEventTitle(lastBtn, "last", "Last");
     return lastBtn;
 }
+const _disableBtnsConditionally = () => {
+    const tfoot = _getTableEl().querySelector('tfoot');
+    const buttons = tfoot.querySelectorAll('button');
+    buttons.forEach(btn => {
+        if (['next', 'last'].includes(btn.title.toLowerCase())) {
+            btn.disabled = _disableOnLastPage();
+        }
+        else if (['previous', 'first'].includes(btn.title.toLowerCase())) {
+            btn.disabled = _disableOnFirstPage();
+        }
+    });
+}
+const _disableOnLastPage = () => _getCurrentPage() >= common.getPaginationData().totalPages;
+const _disableOnFirstPage = () => _getCurrentPage() <= 1;
 const _getBtn = () => {
     return hexCode => {
         const btn = document.createElement("button");
@@ -77,29 +100,29 @@ const _getBtn = () => {
  * @param {"first"|"previous"|"next"|"last"} moveDirection 
  * @param {"First"|"Previous"|"Next"|"Last"} title 
 */
-const setBtnEventTitle = (btn, moveDirection, title) => {
-    btn.addEventListener("click", () => moveToDir(moveDirection));
+const _setBtnEventTitle = (btn, moveDirection, title) => {
+    btn.addEventListener("click", () => _moveToDir(moveDirection));
     btn.title = title;
 }
 const _getPageDropdown = () => {
     const pageDropdown = document.createElement("select");
-    [5, 10, 25, 50].forEach(pageSize => {
+    pageSizes.forEach(pageSize => {
         let option = new Option(pageSize, pageSize);
         option.className = "page-size-dropdown";
         pageDropdown.options.add(option);
     });
-    pageDropdown.options.selectedIndex = 3;
+    pageDropdown.options.selectedIndex = pageSizes.length - 1;
     pageDropdown.classList.add("mx-1", "page-size-dropdown");
-    pageDropdown.addEventListener("change", () => changePageSize(event));
+    pageDropdown.addEventListener("change", () => _changePageSize(event));
     return pageDropdown;
 }
 /**
  * 
  * @param {Event} event 
  */
-const changePageSize = (event) => {
+const _changePageSize = (event) => {
     const selectedPageSize = Number(event.srcElement.value);
-    const slicedData = common.getTblRows(_getRowData().slice(0, selectedPageSize));
+    const slicedData = common.getHTMLTblRows(_getRowData().slice(0, selectedPageSize));
     common.setTblRows(_getTableEl().tBodies[0], slicedData);
     console.log(selectedPageSize);
 }
@@ -109,39 +132,41 @@ const changePageSize = (event) => {
  * @param {'first'|'previous'|'next'|'last'} direction 
  * @param {number} pageNum
  */
-const moveToDir = (direction) => {
+const _moveToDir = (direction) => {
     if (direction == "first") {
-        goToPage(0);
+        _goToPage(1);
     }
     else if (direction == "previous") {
-        goToPageSafe(getCurrentPage() - 1);
+        _goToPageSafe(_getCurrentPage() - 1);
     }
     else if (direction == "next") {
-        goToPageSafe(getCurrentPage() + 1);
+        _goToPageSafe(_getCurrentPage() + 1);
     }
     else if (direction == "last") {
-        goToPage(common.getPaginationData().totalPages);
+        _goToPage(common.getPaginationData().totalPages);
     }
 }
-const getCurrentPage = () => {
+const _getCurrentPage = () => {
     const tfoot = _getTableEl().querySelector("tfoot");
     return Number(tfoot.querySelector("input").value);
 }
-const setCurrentPage = (pageNumber) => {
+const _setCurrentPage = (pageNumber) => {
     const tfoot = _getTableEl().querySelector("tfoot");
     tfoot.querySelector("input").value = Number(pageNumber);
 }
-const goToPageSafe = page => {
+const _goToPageSafe = page => {
     if (page > 0 && page <= common.getPaginationData().totalPages) {
-        return goToPage(page);
+        return _goToPage(page);
     }
-    return setCurrentPage(0);
+    return _goToPage(1);
 }
 /**
  * 
  * @param {number} pageNumber 
  */
-const goToPage = (pageNumber) => {
+const _goToPage = (pageNumber) => {
     pageNumber = Number(pageNumber);
+    _setCurrentPage(pageNumber);
+    _disableBtnsConditionally();
     console.log(pageNumber);
 }
