@@ -35,6 +35,14 @@
   font-size: medium;
 }
 
+.font-size-small {
+  font-size: small;
+}
+
+.font-weight-normal {
+  font-weight: normal;
+}
+
 .d-flex {
   display: -webkit-box;
   display: -ms-flexbox;

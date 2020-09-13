@@ -14,7 +14,6 @@ const pageSizes = [5, 10, 25, 50];
  */
 const _createElement = element => document.createElement(element);
 const _createDocFragment = () => document.createDocumentFragment();
-const _getRowData = () => common.getRowData();
 const _getTableEl = () => common.getTableEl();
 
 export const initPagination = () => {
@@ -34,9 +33,11 @@ const _appendFooterControls = th => {
         _getFirstPageBtn(),
         _getPreviousPageBtn(),
         _getPageInput(),
+        _getTotalPageLabel(),
         _getNextPageBtn(),
         _getLastPageBtn(),
         _getPageDropdown(),
+        _getRowsInfoSpan(),
     ]);
 }
 const _getPageInput = () => {
@@ -48,6 +49,27 @@ const _getPageInput = () => {
     pageField.max = common.getPaginationData().totalPages;
     pageField.addEventListener("keyup", () => _goToPage(event.srcElement.value));
     return pageField;
+}
+const _getTotalPageLabel = () => {
+    const span = _createElement('span');
+    span.innerText = `/ ${common.getPaginationData().totalPages}`
+    span.classList.add('ml-1', 'font-size-small', 'font-weight-normal');
+    return span;
+}
+const _getRowsInfoSpan = () => {
+    const span = _createElement('span');
+    span.innerText = _getRowsInfoMessage();
+    span.classList.add('float-right', 'ml-2', 'font-size-small', 'font-weight-normal');
+    span.id = 'row-message';
+    return span;
+}
+const _getRowsInfoMessage = () => {
+    const lastRow = _getCurrentPage() * _getSelectedPageSize();
+    return `${_getCorrectLastRow(lastRow)}/${common.getPaginationData().totalRecords} records`;
+}
+const _getCorrectLastRow = lastRow => {
+    const totalRecords = common.getPaginationData().totalRecords;
+    return lastRow > totalRecords ? totalRecords : lastRow
 }
 const _getFirstPageBtn = () => {
     const btn = _getBtn();
@@ -121,11 +143,14 @@ const _getPageDropdown = () => {
  */
 const _changePageSize = (event) => {
     const selectedPageSize = Number(event.srcElement.value);
-    _paginate(_getCurrentPage() - 1, selectedPageSize)
+    _paginate(_getCurrentPage() - 1, selectedPageSize);
 }
 const _getSelectedPageSize = () => {
     const tfoot = _getTableEl().tFoot;
-    return Number(tfoot.querySelector('select').value);
+    if (tfoot) {
+        return Number(tfoot.querySelector('select').value);
+    }
+    return pageSizes[pageSizes.length - 1];
 }
 const _renderUpdatedRows = rows => {
     common.setTblRows(_getTableEl().tBodies[0], rows);
@@ -149,12 +174,15 @@ const _moveToDir = (direction) => {
     }
 }
 const _getCurrentPage = () => {
-    const tfoot = _getTableEl().querySelector("tfoot");
-    return Number(tfoot.querySelector("input").value);
+    const tfoot = _getTableEl().querySelector('tfoot');
+    if (tfoot) {
+        return Number(tfoot.querySelector('input').value);
+    }
+    return 1;
 }
 const _setCurrentPage = (pageNumber) => {
-    const tfoot = _getTableEl().querySelector("tfoot");
-    tfoot.querySelector("input").value = Number(pageNumber);
+    const tfoot = _getTableEl().querySelector('tfoot');
+    tfoot.querySelector('input').value = Number(pageNumber);
 }
 const _goToPageSafe = page => {
     if (page > 0 && page <= common.getPaginationData().totalPages) {
@@ -174,16 +202,32 @@ const _goToPage = (pageNumber) => {
 const _paginate = async (pageNumber, pageSize) => {
     await fetch(`${URL}?pageNo=${pageNumber}&pageSize=${pageSize}`)
         .then(response => response.json())
-        .then(async responseData => {
+        .then(responseData => {
             if (responseData.data.length > 0) {
-                const _htmlRows = common.getHTMLTblRows(responseData.data)
-                await common
+                common
                     .setPageData(responseData.pageData.totalRecords, responseData.pageData.totalPages)
                     .then(() => {
+                        const _htmlRows = common.getHTMLTblRows(responseData.data)
                         _renderUpdatedRows(_htmlRows);
                     })
                     .catch(error => console.log('Error in _paginate >> ', error));
-                await common.setRows(responseData.data);
+                common.setRows(responseData.data);
+                _updatePaginationInfo();
             }
         });
+}
+const _updatePaginationInfo = () => {
+    _updateTotalPages();
+    _updateRowsMessage();
+}
+const _updateTotalPages = () => {
+    debugger;
+    const tfoot = _getTableEl().tFoot;
+    tfoot.querySelector('span').innerText = `/ ${common.getPaginationData().totalPages}`;
+}
+const _updateRowsMessage = () => {
+    debugger;
+    const tfoot = _getTableEl().tFoot;
+    tfoot.querySelector('span#row-message').innerText = _getRowsInfoMessage();
+
 }
