@@ -6,7 +6,6 @@ const fetchData = async () => {
         .then(response => response.json())
         .then(responseData => {
             if (responseData.data.length > 0) {
-                debugger;
                 const table = document.querySelector('table');
                 initTable(table, responseData.data);
                 initPagination(
