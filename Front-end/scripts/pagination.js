@@ -95,7 +95,6 @@ const _getBtn = () => {
     }
 }
 /**
- * 
  * @param {HTMLButtonElement} btn 
  * @param {"first"|"previous"|"next"|"last"} moveDirection 
  * @param {"First"|"Previous"|"Next"|"Last"} title 
@@ -117,7 +116,6 @@ const _getPageDropdown = () => {
     return pageDropdown;
 }
 /**
- * 
  * @param {Event} event 
  */
 const _changePageSize = (event) => {
@@ -128,7 +126,6 @@ const _changePageSize = (event) => {
 }
 
 /**
- * 
  * @param {'first'|'previous'|'next'|'last'} direction 
  * @param {number} pageNum
  */
@@ -161,7 +158,6 @@ const _goToPageSafe = page => {
     return _goToPage(1);
 }
 /**
- * 
  * @param {number} pageNumber 
  */
 const _goToPage = (pageNumber) => {

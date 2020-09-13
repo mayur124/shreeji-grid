@@ -31,7 +31,7 @@ table th {
           user-select: none;
 }
 
-table th span.text-upper {
+table th label.text-upper {
   cursor: pointer;
 }
 

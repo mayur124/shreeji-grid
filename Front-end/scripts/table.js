@@ -88,7 +88,7 @@ const _renderBody = () => {
 
 const _initSort = () => {
     const _tblEl = _getTableEl();
-    _tblEl.querySelectorAll("span.text-upper").forEach((headerCell, index) => {
+    _tblEl.querySelectorAll("label.text-upper").forEach((headerCell, index) => {
         headerCell.addEventListener("click", () => {
             const isAscending = headerCell.classList.contains("th-sort-asc");
             _sortTableByColumn(index, !isAscending);
@@ -104,7 +104,7 @@ const _sortTableByColumn = (index, ascending = true) => {
     const rows = common.getHTMLTblRows(_getRowData());
     const sortedRows = rows.sort((a, b) => {
         let aColText = a.querySelector(`td:nth-child(${index + 1})`).textContent.trim();
-        let bColText = b.querySelector(`td:nth-child(${colIndex + 1})`).textContent.trim();
+        let bColText = b.querySelector(`td:nth-child(${index + 1})`).textContent.trim();
         if (_isNumeric(aColText)) {
             aColText = Number(aColText);
             bColText = Number(bColText);
@@ -117,7 +117,7 @@ const _sortTableByColumn = (index, ascending = true) => {
         }
     });
     common.setTblRows(_getTblBody(), sortedRows);
-    _handleToggleArrowStyle(colIndex, ascending);
+    _handleToggleArrowStyle(index, ascending);
 }
 
 const _isNumeric = text => {
@@ -130,9 +130,9 @@ const _isNumeric = text => {
 */
 const _handleToggleArrowStyle = (colIndex, ascending) => {
     const tblEl = _getTableEl();
-    tblEl.querySelectorAll("thead tr:nth-child(1) th span").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
-    let selectedSpan = tblEl.querySelector(`thead tr:nth-child(1) th:nth-child(${colIndex + 1}) span`);
-    let toggle = _toggleClass(selectedSpan);
+    tblEl.querySelectorAll("thead tr:nth-child(1) th label").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
+    let selectedLabel = tblEl.querySelector(`thead tr:nth-child(1) th:nth-child(${colIndex + 1}) label`);
+    let toggle = _toggleClass(selectedLabel);
     toggle("th-sort-asc")(ascending);
     toggle("th-sort-desc")(!ascending);
 }
