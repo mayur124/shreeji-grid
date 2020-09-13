@@ -16,8 +16,8 @@ let _tableData;
     * getColumnCount: () => number,
     * })} tableData 
    */
-export const setTableData = async tableData => {
-    return await new Promise((resolve, reject) => {
+export const setTableData = tableData => {
+    return new Promise((resolve, reject) => {
         if (tableData) {
             _tableData = tableData;
             resolve();
