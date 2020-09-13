@@ -1,4 +1,5 @@
 import * as common from "./common.js"
+import { URL } from './config.js';
 
 const _btnHexCode = {
     firstBtn: '&#9668;&#9668;',
@@ -120,11 +121,15 @@ const _getPageDropdown = () => {
  */
 const _changePageSize = (event) => {
     const selectedPageSize = Number(event.srcElement.value);
-    const slicedData = common.getHTMLTblRows(_getRowData().slice(0, selectedPageSize));
-    common.setTblRows(_getTableEl().tBodies[0], slicedData);
-    console.log(selectedPageSize);
+    _paginate(_getCurrentPage() - 1, selectedPageSize)
 }
-
+const _getSelectedPageSize = () => {
+    const tfoot = _getTableEl().tFoot;
+    return Number(tfoot.querySelector('select').value);
+}
+const _renderUpdatedRows = rows => {
+    common.setTblRows(_getTableEl().tBodies[0], rows);
+}
 /**
  * @param {'first'|'previous'|'next'|'last'} direction 
  * @param {number} pageNum
@@ -155,7 +160,7 @@ const _goToPageSafe = page => {
     if (page > 0 && page <= common.getPaginationData().totalPages) {
         return _goToPage(page);
     }
-    return _goToPage(1);
+    return _goToPage(0);
 }
 /**
  * @param {number} pageNumber 
@@ -164,5 +169,21 @@ const _goToPage = (pageNumber) => {
     pageNumber = Number(pageNumber);
     _setCurrentPage(pageNumber);
     _disableBtnsConditionally();
-    console.log(pageNumber);
+    _paginate(pageNumber - 1, _getSelectedPageSize());
+}
+const _paginate = async (pageNumber, pageSize) => {
+    await fetch(`${URL}?pageNo=${pageNumber}&pageSize=${pageSize}`)
+        .then(response => response.json())
+        .then(async responseData => {
+            if (responseData.data.length > 0) {
+                const _htmlRows = common.getHTMLTblRows(responseData.data)
+                await common
+                    .setPageData(responseData.pageData.totalRecords, responseData.pageData.totalPages)
+                    .then(() => {
+                        _renderUpdatedRows(_htmlRows);
+                    })
+                    .catch(error => console.log('Error in _paginate >> ', error));
+                await common.setRows(responseData.data);
+            }
+        });
 }

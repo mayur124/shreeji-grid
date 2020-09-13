@@ -1,9 +1,10 @@
 import { renderTable } from "./table.js";
 import { initPagination } from './pagination.js'
 import { setTableData } from "./common.js";
+import { URL } from "./config.js";
 
 const fetchData = async () => {
-    await fetch("http://localhost:8099/list")
+    await fetch(URL)
         .then(response => response.json())
         .then(responseData => {
             if (responseData.data.length > 0) {
@@ -45,6 +46,10 @@ const TableData = ({ tableEl, pageData, rowData, numOfCols }) => {
         getPageData: () => _pageData,
         getRowData: () => _rowData,
         getColumnCount: () => _columnsCount,
+        setRows: newRows => _rowData = newRows,
+        setPageData: ({ totalRecords, totalPages }) => {
+            _pageData = { totalRecords, totalPages };
+        }
     }
 }
 document.addEventListener('load', fetchData());

@@ -5,7 +5,9 @@
 * getPageData: () => {totalRecords: number, totalPages: number},
 * getRowData: () => any,
 * getColumnCount: () => number,
-* })} paginationOb
+* setPageData: ({totalRecords: number, totalPages: number}) => void,
+* setRows: (rows:any[]) => void
+* })} _tableData
 */
 let _tableData;
 /**
@@ -30,6 +32,18 @@ export const getTableEl = () => _tableData.getTableElement();
 export const getRowData = () => _tableData.getRowData();
 export const getPaginationData = () => _tableData.getPageData();
 export const getColumnCount = () => _tableData.getColumnCount();
+export const setPageData = (totalRecords, totalPages) => {
+    return new Promise(resolve => {
+        _tableData.setPageData({ totalRecords, totalPages });
+        resolve();
+    });
+};
+export const setRows = newRows => {
+    return new Promise(resolve => {
+        _tableData.setRows(newRows);
+        resolve();
+    })
+}
 //#endregion
 
 export const appendToElement = parentEl => elements => elements.forEach(element => parentEl.appendChild(element));
