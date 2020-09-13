@@ -1,12 +1,7 @@
-import { Pagination } from "./pagination.js";
 import * as common from "./common.js";
 
 let tableData;
 let tableElement;
-
-export const initPagination = (tblEl, pageData, tblData, numOfCols) => {
-    new Pagination(tblEl, pageData, tblData, numOfCols);
-}
 
 /**
  * @param {HTMLTableElement} tblEl 
@@ -55,8 +50,8 @@ const _getHeaderTh = (value, index) => {
     _th.classList.add("border");
     _label.innerText = value;
     _label.classList.add("text-upper", "font-size-large");
-    const _multipleAppend = common.createMultipleAppendTo(_th);
-    _multipleAppend([
+    const _appendToTh = common.appendToElement(_th);
+    _appendToTh([
         _label,
         _getSearchNode(index)
     ]);

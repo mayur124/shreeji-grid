@@ -1,4 +1,13 @@
-export const createMultipleAppendTo = parentEl => elements => elements.forEach(element => parentEl.appendChild(element));
+export const appendToElement = parentEl => elements => elements.forEach(element => parentEl.appendChild(element));
+export const appendRecursive = parentEl => {
+    let innerAppend = childEl => {
+        if (childEl) {
+            parentEl.appendChild(childEl);
+            return appendRecursive(childEl);
+        }
+    }
+    return innerAppend;
+}
 export const getTblRows = rows => rows.map(row => getRow(row));
 export const renderTblBody = rows => {
     const tBody = document.createElement('tbody');
@@ -23,13 +32,7 @@ const _getTd = value => {
  * @param {any} text 
  * @returns {string} alignment class
 */
-const _getAlignmentClass = text => {
-    if (typeof text == "string") {
-        return "text-left";
-    } else {
-        return "text-right";
-    }
-}
+const _getAlignmentClass = text => typeof text == 'string' ? 'text-left' : 'text-right';
 /**
  * @param {HTMLTableSectionElement} tBody
  * @param {HTMLTableRowElement[]} rows 
