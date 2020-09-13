@@ -221,12 +221,10 @@ const _updatePaginationInfo = () => {
     _updateRowsMessage();
 }
 const _updateTotalPages = () => {
-    debugger;
     const tfoot = _getTableEl().tFoot;
     tfoot.querySelector('span').innerText = `/ ${common.getPaginationData().totalPages}`;
 }
 const _updateRowsMessage = () => {
-    debugger;
     const tfoot = _getTableEl().tFoot;
     tfoot.querySelector('span#row-message').innerText = _getRowsInfoMessage();
 
