@@ -1,49 +1,21 @@
 import * as common from "./common.js"
 
 /**
- * @type {({
- * getTableElement: () => HTMLTableElement,
- * getPageData: () => {totalRecords: number, totalPages: number},
- * getRowData: () => any,
- * getColumnCount: () => number,
- * })} paginationOb
-*/
-let paginationOb;
-
-/**
  * @param {HTMLElementTagNameMap} element 
  */
 const _createElement = element => document.createElement(element);
 const _createDocFragment = () => document.createDocumentFragment();
+const _getRowData = () => common.getRowData();
+const _getTableEl = () => common.getTableEl();
 
-/**
- * @param {({
- * getTableElement: () => HTMLTableElement,
- * getPageData: () => {totalRecords: number, totalPages: number},
- * getRowData: () => any,
- * getColumnCount: () => number,
- * })} paginationOb 
-*/
-export const initPagination = paginationOb => {
-    _setPaginationOb(paginationOb);
+export const initPagination = () => {
     const _footerFragment = _createDocFragment();
     const _tableFooter = _createElement("tfoot");
     const _th = _createElement("th");
-    _th.colSpan = paginationOb.getColumnCount();
+    _th.colSpan = common.getColumnCount();
     _appendFooterControls(_th);
     common.appendRecursive(_footerFragment)(_tableFooter)(_th);
-    paginationOb.getTableElement().appendChild(_footerFragment);
-}
-/**
- * @param {({
- * getTableElement: () => HTMLTableElement,
- * getPageData: () => {totalRecords: number, totalPages: number},
- * getRowData: () => any,
- * getColumnCount: () => number,
- * })} ob 
-*/
-const _setPaginationOb = ob => {
-    paginationOb = ob;
+    _getTableEl().appendChild(_footerFragment);
 }
 
 const _appendFooterControls = th => {
@@ -63,7 +35,7 @@ const _getPageInput = () => {
     pageField.classList.add("text-center", "font-size-medium");
     pageField.value = 1;
     pageField.min = 1;
-    pageField.max = paginationOb.getPageData().totalPages;
+    pageField.max = common.getPaginationData().totalPages;
     pageField.addEventListener("keyup", () => goToPage(event.srcElement.value));
     return pageField;
 }
@@ -128,11 +100,9 @@ const _getPageDropdown = () => {
 const changePageSize = (event) => {
     const selectedPageSize = Number(event.srcElement.value);
     const slicedData = common.getTblRows(_getRowData().slice(0, selectedPageSize));
-    common.setTblRows(_getTableElement().tBodies[0], slicedData);
+    common.setTblRows(_getTableEl().tBodies[0], slicedData);
     console.log(selectedPageSize);
 }
-const _getRowData = () => paginationOb.getRowData();
-const _getTableElement = () => paginationOb.getTableElement();
 
 /**
  * 
@@ -150,19 +120,19 @@ const moveToDir = (direction) => {
         goToPageSafe(getCurrentPage() + 1);
     }
     else if (direction == "last") {
-        goToPage(pageData.totalPages);
+        goToPage(common.getPaginationData().totalPages);
     }
 }
 const getCurrentPage = () => {
-    const tfoot = _getTableElement().querySelector("tfoot");
+    const tfoot = _getTableEl().querySelector("tfoot");
     return Number(tfoot.querySelector("input").value);
 }
 const setCurrentPage = (pageNumber) => {
-    const tfoot = _getTableElement().querySelector("tfoot");
+    const tfoot = _getTableEl().querySelector("tfoot");
     tfoot.querySelector("input").value = Number(pageNumber);
 }
 const goToPageSafe = page => {
-    if (page > 0 && page <= pageData.totalPages) {
+    if (page > 0 && page <= common.getPaginationData().totalPages) {
         return goToPage(page);
     }
     return setCurrentPage(0);

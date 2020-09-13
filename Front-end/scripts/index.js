@@ -1,5 +1,6 @@
-import { initTable } from "./table.js";
+import { renderTable } from "./table.js";
 import { initPagination } from './pagination.js'
+import { setTableData } from "./common.js";
 
 const fetchData = async () => {
     await fetch("http://localhost:8099/list")
@@ -7,14 +8,18 @@ const fetchData = async () => {
         .then(responseData => {
             if (responseData.data.length > 0) {
                 const table = document.querySelector('table');
-                initTable(table, responseData.data);
-                initPagination(
-                    PaginationData({
+                setTableData(
+                    TableData({
                         tableEl: table,
                         pageData: responseData.pageData,
                         rowData: responseData.data,
                         numOfCols: _getNumOfCols(responseData.data[0]),
                     })
+                ).then(() => {
+                    renderTable();
+                    initPagination();
+                }).catch(error =>
+                    console.log('Error while setting table data >> ', error)
                 );
             }
         })
@@ -30,7 +35,7 @@ const _getNumOfCols = data => Object.keys(data).length;
  * numOfCols: number
  * })} param0 
  */
-const PaginationData = ({ tableEl, pageData, rowData, numOfCols }) => {
+const TableData = ({ tableEl, pageData, rowData, numOfCols }) => {
     let _tableEl = tableEl;
     let _pageData = pageData;
     let _rowData = rowData;

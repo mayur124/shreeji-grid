@@ -1,3 +1,37 @@
+//#region Table-Initialization
+/**
+* @type {({
+* getTableElement: () => HTMLTableElement,
+* getPageData: () => {totalRecords: number, totalPages: number},
+* getRowData: () => any,
+* getColumnCount: () => number,
+* })} paginationOb
+*/
+let _tableData;
+/**
+ * @param {({
+    * getTableElement: () => HTMLTableElement,
+    * getPageData: () => {totalRecords: number, totalPages: number},
+    * getRowData: () => any,
+    * getColumnCount: () => number,
+    * })} tableData 
+   */
+export const setTableData = async tableData => {
+    return await new Promise((resolve, reject) => {
+        if (tableData) {
+            _tableData = tableData;
+            resolve();
+        } else {
+            reject(tableData);
+        }
+    });
+}
+export const getTableEl = () => _tableData.getTableElement();
+export const getRowData = () => _tableData.getRowData();
+export const getPaginationData = () => _tableData.getPageData();
+export const getColumnCount = () => _tableData.getColumnCount();
+//#endregion
+
 export const appendToElement = parentEl => elements => elements.forEach(element => parentEl.appendChild(element));
 export const appendRecursive = parentEl => {
     let innerAppend = childEl => {

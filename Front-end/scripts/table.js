@@ -1,44 +1,32 @@
 import * as common from "./common.js";
 
-let tableData;
-let tableElement;
-
-/**
- * @param {HTMLTableElement} tblEl 
- * @param {{data: any, pageData: {totalRecords: number, totalPages: number}}} tblData
- */
-export const initTable = (tblEl, tblData) => {
-    _setTblData(tblData);
-    _setTblElement(tblEl)
-    _renderHeaders(tblEl, tblData[0]);
-    _renderBody(tblEl, tblData);
-    _initSort(tblEl);
+export const renderTable = () => {
+    _renderHeaders();
+    _renderBody();
+    _initSort();
 }
-const _setTblData = tblData => tableData = tblData;
-const _getTblData = () => tableData;
-/**
- * @param {HTMLTableElement} tblEl 
- */
-const _setTblElement = tblEl => tableElement = tblEl;
-const _getTblElement = () => tableElement;
 
 /**
  * @param {HTMLElementTagNameMap} element 
  */
 const _createElement = element => document.createElement(element);
 const _createDocFragment = () => document.createDocumentFragment();
+const _getRowData = () => common.getRowData();
+const _getTableEl = () => common.getTableEl();
 
-const _renderHeaders = (tblEl, data) => {
+const _renderHeaders = () => {
     const _headerFrag = _createDocFragment();
     const _tHead = _createElement('thead');
-    _tHead.appendChild(_getHeaderRow(data))
+    const _headers = _getRowData()[0];
+    const _tblEl = _getTableEl();
+    _tHead.appendChild(_getHeaderRow(_headers));
     _headerFrag.appendChild(_tHead);
-    tblEl.appendChild(_headerFrag);
+    _tblEl.appendChild(_headerFrag);
 }
 
-const _getHeaderRow = data => {
+const _getHeaderRow = headers => {
     const _headerRow = _createElement('tr');
-    Object.keys(data).forEach((header, index) => {
+    Object.keys(headers).forEach((header, index) => {
         _headerRow.appendChild(_getHeaderTh(header, index));
     })
     return _headerRow;
@@ -74,7 +62,7 @@ const _getSearchNode = index => {
 */
 const _search = (event, index) => {
     const value = event.srcElement.value.toLowerCase();
-    const rows = common.getTblRows(_getTblData());
+    const rows = common.getTblRows(_getRowData());
     const filteredRows = rows.filter(row => {
         let _text = row.querySelector(`td:nth-child(${index + 1})`).textContent.trim();
         return _text.toLowerCase().indexOf(value) > -1;
@@ -87,17 +75,20 @@ const _search = (event, index) => {
 }
 
 const _getTblBody = () => {
-    return _getTblElement().tBodies[0];
+    return _getTableEl().tBodies[0];
 }
 
-const _renderBody = (tblEl, data) => {
+const _renderBody = () => {
     const _bodyFrag = _createDocFragment();
-    _bodyFrag.appendChild(common.renderTblBody(data));
-    tblEl.appendChild(_bodyFrag);
+    const _tblEl = _getTableEl();
+    const _data = _getRowData();
+    _bodyFrag.appendChild(common.renderTblBody(_data));
+    _tblEl.appendChild(_bodyFrag);
 }
 
-const _initSort = tblEl => {
-    tblEl.querySelectorAll("span.text-upper").forEach((headerCell, index) => {
+const _initSort = () => {
+    const _tblEl = _getTableEl();
+    _tblEl.querySelectorAll("span.text-upper").forEach((headerCell, index) => {
         headerCell.addEventListener("click", () => {
             const isAscending = headerCell.classList.contains("th-sort-asc");
             _sortTableByColumn(index, !isAscending);
@@ -110,7 +101,7 @@ const _initSort = tblEl => {
 */
 const _sortTableByColumn = (index, ascending = true) => {
     const dirModifier = ascending === true ? 1 : -1;
-    const rows = common.getTblRows(_getTblData());
+    const rows = common.getTblRows(_getRowData());
     const sortedRows = rows.sort((a, b) => {
         let aColText = a.querySelector(`td:nth-child(${index + 1})`).textContent.trim();
         let bColText = b.querySelector(`td:nth-child(${colIndex + 1})`).textContent.trim();
@@ -138,7 +129,7 @@ const _isNumeric = text => {
  * @param {boolean} ascending 
 */
 const _handleToggleArrowStyle = (colIndex, ascending) => {
-    const tblEl = _getTblElement();
+    const tblEl = _getTableEl();
     tblEl.querySelectorAll("thead tr:nth-child(1) th span").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
     let selectedSpan = tblEl.querySelector(`thead tr:nth-child(1) th:nth-child(${colIndex + 1}) span`);
     let toggle = _toggleClass(selectedSpan);
