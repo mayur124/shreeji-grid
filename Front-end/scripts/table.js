@@ -61,7 +61,7 @@ const _getSearchNode = index => {
  * @param {number} index
 */
 const _search = (event, index) => {
-    const value = event.srcElement.value.toLowerCase();
+    const value = event.target.value.toLowerCase();
     const rows = common.getHTMLTblRows(_getRowData());
     const filteredRows = rows.filter(row => {
         let _text = row.querySelector(`td:nth-child(${index + 1})`).textContent.trim();
