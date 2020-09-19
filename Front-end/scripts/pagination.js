@@ -47,8 +47,38 @@ const _getPageInput = () => {
     pageField.value = 1;
     pageField.min = 1;
     pageField.max = common.getPaginationData().totalPages;
-    pageField.addEventListener("keyup", () => _goToPage(event.srcElement.value));
+    pageField.addEventListener("keyup", _debounce(() => _validateInput(pageField), 500));
     return pageField;
+}
+const _validateInput = pageInput => {
+    const input = Number(pageInput.value);
+    const min = Number(pageInput.min);
+    const max = Number(pageInput.max);
+    if (input) {
+        if (input >= min && input <= max) {
+            _goToPage(input);
+        } else {
+            resetPagination();
+        }
+    } else {
+        resetPagination();
+    }
+}
+const resetPagination = () => {
+    _setCurrentPage(1);
+    _goToPage(1);
+}
+/**
+ * 
+ * @param {Function} callback 
+ * @param {number} delay 
+ */
+const _debounce = (callback, delay) => {
+    let timeout
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => callback.apply(this, ...args), delay);
+    };
 }
 const _getTotalPageLabel = () => {
     const span = _createElement('span');
@@ -59,13 +89,15 @@ const _getTotalPageLabel = () => {
 const _getRowsInfoSpan = () => {
     const span = _createElement('span');
     span.innerText = _getRowsInfoMessage();
-    span.classList.add('float-right', 'ml-2', 'font-size-small', 'font-weight-normal');
+    span.classList.add('float-right', 'top-point-25-rem', 'font-size-small', 'font-weight-normal');
     span.id = 'row-message';
     return span;
 }
 const _getRowsInfoMessage = () => {
-    const lastRow = _getCurrentPage() * _getSelectedPageSize();
-    return `${_getCorrectLastRow(lastRow)}/${common.getPaginationData().totalRecords} records`;
+    const pageSize = _getSelectedPageSize();
+    const lastRow = _getCurrentPage() * pageSize;
+    const firstRow = (lastRow - pageSize) + 1;
+    return `${firstRow}-${_getCorrectLastRow(lastRow)}/${common.getPaginationData().totalRecords} records`;
 }
 const _getCorrectLastRow = lastRow => {
     const totalRecords = common.getPaginationData().totalRecords;
@@ -203,7 +235,7 @@ const _paginate = async (pageNumber, pageSize) => {
     await fetch(`${URL}?pageNo=${pageNumber}&pageSize=${pageSize}`)
         .then(response => response.json())
         .then(responseData => {
-            if (responseData.data.length > 0) {
+            if (responseData.data?.length > 0) {
                 common
                     .setPageData(responseData.pageData.totalRecords, responseData.pageData.totalPages)
                     .then(() => {
@@ -227,5 +259,4 @@ const _updateTotalPages = () => {
 const _updateRowsMessage = () => {
     const tfoot = _getTableEl().tFoot;
     tfoot.querySelector('span#row-message').innerText = _getRowsInfoMessage();
-
 }

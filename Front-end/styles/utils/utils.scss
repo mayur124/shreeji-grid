@@ -40,6 +40,13 @@
 .justify-content-around {
   justify-content: space-around;
 }
+.float-right {
+  position: relative;
+  float: right;
+}
+.top-point-25-rem {
+  top: 0.25rem;
+}
 @for $val from 0 to 6 {
   .p-#{$val} {
     padding: #{$val}rem;
